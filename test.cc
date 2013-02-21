@@ -6,6 +6,7 @@
 #include <iostream>
 
 // gets base path then appends material path to the base path
+// gets base path then appends material path to the base path
 char* getMtlPath(const char* path, char* mat){
   
   char* p;
@@ -16,8 +17,8 @@ char* getMtlPath(const char* path, char* mat){
     int start = p-path+1;
     size += start + 2 + strlen(mat); // the two is for the slash and the final end-of-string \0 character
     char* mtlPath = (char*) malloc(size);
-    strcpy(mtlPath, path+start);
-    strcat(mtlPath, "/");
+    printf("start: %i\n", start);
+    strncpy(mtlPath, path, start);
     strcat(mtlPath, mat);
     return mtlPath;
   } else { // no base path, so we just return the string
@@ -33,43 +34,43 @@ main(
   char **argv)
 {
   char* matlPath = getMtlPath("test.obj", "test.mat");
-  // char* matlPath = getMtlPath("rain/something/test.obj", "test.mat");
+  // char* matlPath = getMtlPath("rain/test.obj", "test.mat");
   printf("matpath: %s\n", matlPath);
   printf("sizeof matpath: %i\n", strlen(matlPath));
-  // char path[] = "rain/something/test.obj";
-  // // char path[] = "test.obj";
-  // char basePath[4096];
-  // strcpy (basePath, path);
+  char path[] = "rain/something/test.obj";
+  // char path[] = "test.obj";
+  char basePath[4096];
+  strcpy (basePath, path);
 
-  // char *p;
-  // p = strrchr(basePath, '/');
-  // if(p){
-  //   p[0] = '\0';
-  // } else {
-  //   basePath[0] = '\0';
-  // }
-  // printf("path: %s\n", basePath);
+  char *p;
+  p = strrchr(basePath, '/');
+  if(p){
+    p[0] = '\0';
+  } else {
+    basePath[0] = '\0';
+  }
+  printf("path: %s\n", basePath);
 
-  // char mat[] = "mat.mtl";
-  // char matPath[4096];
-  // strcpy(matPath, basePath);
-  // strcat(matPath, "/");
-  // strcat(matPath, mat);
-  // printf("mat path: %s\n", matPath);
+  char mat[] = "mat.mtl";
+  char matPath[4096];
+  strcpy(matPath, basePath);
+  strcat(matPath, "/");
+  strcat(matPath, mat);
+  printf("mat path: %s\n", matPath);
 
+  // std::string inputfile = "cornell_box.obj";
+  std::string inputfile = "obj/cornell_box.obj";
+  std::vector<tinyobj::shape_t> shapes;
 
-  // std::string inputfile = "obj/cornell_box.obj";
-  // std::vector<tinyobj::shape_t> shapes;
-
-  // if (argc > 1) {
-  //   inputfile = std::string(argv[1]);
-  // }
+  if (argc > 1) {
+    inputfile = std::string(argv[1]);
+  }
   
-  // std::string err = tinyobj::LoadObj(shapes, inputfile.c_str());
+  std::string err = tinyobj::LoadObj(shapes, inputfile.c_str());
 
-  // if (!err.empty()) {
-  //   std::cerr << err << std::endl;
-  // }
+  if (!err.empty()) {
+    std::cerr << err << std::endl;
+  }
 
   // std::cout << "# of shapes : " << shapes.size() << std::endl;
 

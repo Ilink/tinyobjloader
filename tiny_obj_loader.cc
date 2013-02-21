@@ -424,30 +424,27 @@ std::string LoadMtl (
   return err.str();
 }
 
-// std::string* getMtlPath(const char* path, char* mat){
-//   // char path[] = "rain/something/test.obj";
-//   // char path[] = "test.obj";
-//   char basePath[4096];
-//   strcpy (basePath, path);
+// gets base path then appends material path to the base path
+char* getMtlPath(const char* path, char* mat){
+  
+  char* p;
+  int size = 0;
 
-//   char *p;
-//   p = strrchr(basePath, '/');
-//   if(p){
-//     p[0] = '\0';
-//   } else {
-//     basePath[0] = '\0';
-//   }
-//   printf("path: %s\n", basePath);
-
-//   // char mat[] = "mat.mtl";
-//   char matPath[4096];
-//   strcpy(matPath, basePath);
-//   strcat(matPath, "/");
-//   strcat(matPath, mat);
-//   printf("mat path: %s\n", matPath);
-
-//   return matPath;
-// }
+  p = strrchr(path, '/');
+  if(p){
+    int start = p-path+1;
+    size += start + 2 + strlen(mat); // the two is for the slash and the final end-of-string \0 character
+    char* mtlPath = (char*) malloc(size);
+    printf("start: %i\n", start);
+    strncpy(mtlPath, path, start);
+    strcat(mtlPath, mat);
+    return mtlPath;
+  } else { // no base path, so we just return the string
+    // allocate so we can always perform "free" later
+    char* mtlPath = (char*) malloc(strlen(mat));
+    return strcpy(mtlPath, mat);
+  }
+}
 
 std::string
 LoadObj(
@@ -576,8 +573,13 @@ LoadObj(
       char namebuf[4096];
       token += 7;
       sscanf(token, "%s", namebuf);
+      printf("name: %s\n", namebuf);
+      printf("filename: %s\n", filename);
 
-      std::string err_mtl = LoadMtl(material_map, namebuf);
+      char* matPath = getMtlPath(filename, namebuf);
+      printf("matpath: %s\n", matPath);
+
+      std::string err_mtl = LoadMtl(material_map, matPath);
       if (!err_mtl.empty()) {
         faceGroup.clear();  // for safety
         return err_mtl;
