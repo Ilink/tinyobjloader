@@ -5,6 +5,7 @@
 #include <cassert>
 #include <iostream>
 
+// gets base path then appends material path to the base path
 char* getMtlPath(const char* path, char* mat){
   
   char* p;
@@ -13,14 +14,16 @@ char* getMtlPath(const char* path, char* mat){
   p = strrchr(path, '/');
   if(p){
     int start = p-path+1;
-    size += start + 2 + sizeof(mat); // the two is for the slash and the final end-of-string \0 character
+    size += start + 2 + strlen(mat); // the two is for the slash and the final end-of-string \0 character
     char* mtlPath = (char*) malloc(size);
     strcpy(mtlPath, path+start);
     strcat(mtlPath, "/");
     strcat(mtlPath, mat);
     return mtlPath;
   } else { // no base path, so we just return the string
-    return mat;
+    // allocate so we can always perform "free" later
+    char* mtlPath = (char*) malloc(strlen(mat));
+    return strcpy(mtlPath, mat);
   }
 }
 
@@ -29,9 +32,10 @@ main(
   int argc,
   char **argv)
 {
-  char* matlPath = getMtlPath("rain/something/test.obj", "test.mat");
+  char* matlPath = getMtlPath("test.obj", "test.mat");
+  // char* matlPath = getMtlPath("rain/something/test.obj", "test.mat");
   printf("matpath: %s\n", matlPath);
-  printf("sizeof matpath: %i\n", sizeof matlPath);
+  printf("sizeof matpath: %i\n", strlen(matlPath));
   // char path[] = "rain/something/test.obj";
   // // char path[] = "test.obj";
   // char basePath[4096];
@@ -104,6 +108,8 @@ main(
   //   }
   //   printf("\n");
   // }
+
+  free(matlPath);
 
   return 0;
 }
