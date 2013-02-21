@@ -424,6 +424,31 @@ std::string LoadMtl (
   return err.str();
 }
 
+// std::string* getMtlPath(const char* path, char* mat){
+//   // char path[] = "rain/something/test.obj";
+//   // char path[] = "test.obj";
+//   char basePath[4096];
+//   strcpy (basePath, path);
+
+//   char *p;
+//   p = strrchr(basePath, '/');
+//   if(p){
+//     p[0] = '\0';
+//   } else {
+//     basePath[0] = '\0';
+//   }
+//   printf("path: %s\n", basePath);
+
+//   // char mat[] = "mat.mtl";
+//   char matPath[4096];
+//   strcpy(matPath, basePath);
+//   strcat(matPath, "/");
+//   strcat(matPath, mat);
+//   printf("mat path: %s\n", matPath);
+
+//   return matPath;
+// }
+
 std::string
 LoadObj(
   std::vector<shape_t>& shapes,
